@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace veamtest
+namespace veeamtest
 {
     static class Program
     {

@@ -7,7 +7,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
 
-namespace veamtest
+namespace veeamtest
 {
     public static class VerifyInput
     {

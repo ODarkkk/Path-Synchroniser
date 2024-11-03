@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace veamtest
+namespace veeamtest
 {
     class FolderSynchronizer
     {
@@ -15,7 +15,6 @@ namespace veamtest
         {
             this.appConfig = appConfig;
         }
-
         public void Start()
         {
             while (true)

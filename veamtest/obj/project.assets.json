@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\diogo\\source\\repos\\veamtest\\veamtest\\veamtest.csproj",
+      "projectUniqueName": "C:\\Users\\diogo\\source\\repos\\veeamtest\\veamtest\\veamtest.csproj",
       "projectName": "veamtest",
-      "projectPath": "C:\\Users\\diogo\\source\\repos\\veamtest\\veamtest\\veamtest.csproj",
+      "projectPath": "C:\\Users\\diogo\\source\\repos\\veeamtest\\veamtest\\veamtest.csproj",
       "packagesPath": "C:\\Users\\diogo\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\diogo\\source\\repos\\veamtest\\veamtest\\obj\\",
+      "outputPath": "C:\\Users\\diogo\\source\\repos\\veeamtest\\veamtest\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
