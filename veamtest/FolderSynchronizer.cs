@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,43 +9,77 @@ namespace veamtest
 {
     class FolderSynchronizer
     {
-        private readonly string sourceFolder;
-        private readonly string replicaFolder;
-        private readonly string logFilePath;
-        private readonly int syncInterval;
+        private readonly AppConfig appConfig;
 
-        public string SourceFolder => sourceFolder;
-        public string ReplicaFolder => replicaFolder;
-        public string LogFilePath => logFilePath;
-        public int SyncInterval => syncInterval;
-
-        public FolderSynchronizer(string[] args)
+        public FolderSynchronizer(AppConfig appConfig)
         {
-            sourceFolder = args[0];
-            replicaFolder = args[1];
-            logFilePath = args[3];
-            syncInterval = int.Parse(args[2]);
+            this.appConfig = appConfig;
         }
-
 
         public void Start()
         {
             while (true)
             {
-                Console.WriteLine($"Synchronizing from {SourceFolder} to {ReplicaFolder}...");
-                Thread.Sleep(SyncInterval);
+                try
+                {
+                    Console.WriteLine($"Synchronizing from {appConfig.SourcePath} to {appConfig.ReplicaPath}...");
+                    SynchronizeFolders();
+                    Thread.Sleep(appConfig.SyncIntervalSeconds * 1000);
+                }
+                catch (Exception ex)
+                {
+                    Logs.FileWrite($"Error during synchronization: {ex.Message}", appConfig.LogFilePath);
+                }
             }
         }
 
         private void SynchronizeFolders()
         {
-            // Get all files and directories in the source folder
-            var sourceFiles = Directory.GetFiles(sourceFolder, "*.*", SearchOption.AllDirectories);
-            var sourceDirs = Directory.GetDirectories(sourceFolder, "*", SearchOption.AllDirectories);
+            var sourceFiles = Directory.GetFiles(appConfig.SourcePath, "*.*", SearchOption.AllDirectories);
+            var sourceFilesSet = new HashSet<string>(sourceFiles.Select(f => Path.GetRelativePath(appConfig.SourcePath, f)));
 
-            foreach ( var sourceDir in sourceDirs ) 
+            foreach (var sourceFile in sourceFiles)
             {
-                var relative = Path.Get
+                // Compute the relative path to keep folder structure
+                string relativePath = Path.GetRelativePath(appConfig.SourcePath, sourceFile);
+                string replicaFile = Path.Combine(appConfig.ReplicaPath, relativePath);
+                bool fileNeedsUpdate = !File.Exists(replicaFile) ||
+                                 File.GetLastWriteTimeUtc(sourceFile) > File.GetLastWriteTimeUtc(replicaFile);
+                if (fileNeedsUpdate)
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(replicaFile));
+                    File.Copy(sourceFile, replicaFile, true);
+
+                    string action = File.Exists(replicaFile) ? "updated" : "copied";
+                    Logs.FileWrite($"File '{relativePath}' was {action} in the replica directory.", appConfig.LogFilePath);
+                }
+            }
+            var replicaFiles = Directory.GetFiles(appConfig.ReplicaPath, "*.*", SearchOption.AllDirectories);
+            foreach (var replicaFile in replicaFiles)
+            {
+                string relativePath = Path.GetRelativePath(appConfig.ReplicaPath, replicaFile);
+                if (!sourceFilesSet.Contains(relativePath))
+                {
+                    File.Delete(replicaFile);
+                    Logs.FileWrite($"File '{relativePath}' was deleted from replica directory.", appConfig.LogFilePath);
+                }
+            }
+
+        }
+
+        private static bool FilesAreEqual(string filePath1, string filePath2)
+        {
+            using (var md5 = MD5.Create())
+            {
+                using (var stream1 = File.OpenRead(filePath1))
+                using (var stream2 = File.OpenRead(filePath2))
+                {
+                    byte[] hash1 = md5.ComputeHash(stream1);
+                    byte[] hash2 = md5.ComputeHash(stream2);
+
+                    return hash1.SequenceEqual(hash2);
+                }
+            }
         }
     }
 }

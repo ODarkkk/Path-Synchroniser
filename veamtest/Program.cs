@@ -6,15 +6,17 @@ namespace veamtest
     {
         static void Main(string[] args)
         {
-            VerifyInput.Check(args);
-            //Console.WriteLine("Works");
-            //Environment.Exit(0);
-            //string sourcePath = args[0];
-            //string targetPath = args[1];
-            //int syncInterval = int.Parse(args[2]);
-            //string logFilePath = args[3];
-            FolderSynchronizer synchronizer = new FolderSynchronizer(args);
-            synchronizer.Start();
+            try
+            {
+                var appConfig = VerifyInput.ParseArguments(args);
+                FolderSynchronizer synchronizer = new FolderSynchronizer(appConfig);
+                synchronizer.Start();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Environment.Exit(1);
+            }
 
         }
     }

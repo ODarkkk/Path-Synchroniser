@@ -8,7 +8,7 @@ namespace veamtest
 {
     public static class Config
     {
-       public static string[] ValidExtensions => [".json", ".log", ".csv", ".txt", ".cef", ".syslog"];
-       public static string TimeFormat => "yyyy-MM-dd HH:mm:ss"; // 2024-04-25 05:07:08
+        public static readonly string[] ValidExtensions = { ".json", ".log", ".csv", ".txt", ".cef", ".syslog" };
+        public static readonly string TimeFormat = "yyyy-MM-dd HH:mm:ss"; // 2024-04-25 05:07:08
     }
 }
