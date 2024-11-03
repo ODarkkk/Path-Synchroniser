@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("veamtest")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f8e720287327c12c96d31974bd5595e348d7e627")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+900c4998e5a9326bfa5e08f2223e9c3c91b59ff9")]
 [assembly: System.Reflection.AssemblyProductAttribute("veamtest")]
 [assembly: System.Reflection.AssemblyTitleAttribute("veamtest")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

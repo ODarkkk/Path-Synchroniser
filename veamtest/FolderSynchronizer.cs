@@ -43,8 +43,7 @@ namespace veamtest
                 // Compute the relative path to keep folder structure
                 string relativePath = Path.GetRelativePath(appConfig.SourcePath, sourceFile);
                 string replicaFile = Path.Combine(appConfig.ReplicaPath, relativePath);
-                bool fileNeedsUpdate = !File.Exists(replicaFile) ||
-                                 File.GetLastWriteTimeUtc(sourceFile) > File.GetLastWriteTimeUtc(replicaFile);
+                bool fileNeedsUpdate = !File.Exists(replicaFile) || !FileVerificator.AreEqual(sourceFile, replicaFile);
                 if (fileNeedsUpdate)
                 {
                     Directory.CreateDirectory(Path.GetDirectoryName(replicaFile));
@@ -65,21 +64,6 @@ namespace veamtest
                 }
             }
 
-        }
-
-        private static bool FilesAreEqual(string filePath1, string filePath2)
-        {
-            using (var md5 = MD5.Create())
-            {
-                using (var stream1 = File.OpenRead(filePath1))
-                using (var stream2 = File.OpenRead(filePath2))
-                {
-                    byte[] hash1 = md5.ComputeHash(stream1);
-                    byte[] hash2 = md5.ComputeHash(stream2);
-
-                    return hash1.SequenceEqual(hash2);
-                }
-            }
         }
     }
 }

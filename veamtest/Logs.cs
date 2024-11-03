@@ -12,7 +12,7 @@ namespace veamtest
         {
             string formattedMessage = $"{DateTime.UtcNow.ToString(Config.TimeFormat)}: {message}";
             File.AppendAllText(logFilePath, formattedMessage + Environment.NewLine);
-            Console.WriteLine(formattedMessage); // Logs to console as well
+            //Console.WriteLine(formattedMessage); // Logs to console as well
         }
     }
 }
