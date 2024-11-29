@@ -49,10 +49,27 @@ namespace Folder_Synchroniser
                 throw new DirectoryNotFoundException($"Source directory '{SourcePath}' does not exist.");
 
             if (!Directory.Exists(ReplicaPath))
-                throw new DirectoryNotFoundException($"Replica directory '{ReplicaPath}' does not exist.");
+                if (!Config.createReplicaFolder)
+                    throw new DirectoryNotFoundException($"Replica directory '{ReplicaPath}' does not exist.");
+                else
+                {
+                    // Creates the replica directory if it does not exist
+                    Directory.CreateDirectory(ReplicaPath);
+                    Logs.FileWrite($"Replica directory '{ReplicaPath}' created.", ReplicaPath);
+                    Console.WriteLine("Replica path didn't existes. Creating a replica folder\t" + ReplicaPath);
+                }
 
             if (!File.Exists(LogFilePath) || !Config.ValidExtensions.Contains(Path.GetExtension(LogFilePath)))
-                throw new ArgumentException($"Log file '{LogFilePath}' is invalid or has an unsupported extension.");
+                if (!Config.createLogFile)
+                    throw new ArgumentException($"Log file '{LogFilePath}' is invalid or has an unsupported extension.");
+                else
+                {
+                    // Creates the log file if it does not exist
+                    var logFilePath = Path.Combine(LogFilePath, LogFilePath) + Config.logFileExt;
+                    File.Create(logFilePath);
+                    Console.WriteLine("Log File didn't exits. Creating a log file\t" + LogFilePath);
+                    Logs.FileWrite($"Log file '{logFilePath}' created.", LogFilePath);
+                }
         }
     }
 }
